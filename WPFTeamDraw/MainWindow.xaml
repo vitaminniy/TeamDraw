@@ -1,0 +1,14 @@
+﻿<Window x:Name="MainWindows" x:Class="WPFTeamDraw.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Team Draw" Height="600" Width="600" ResizeMode="NoResize">
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Width="600" ClipToBounds="True" Grid.Row="0" Background="WhiteSmoke"/>
+        <Canvas x:Name="DrawArea" Width="600" Height="500" ClipToBounds="True" Grid.Row="1" Background="White" MouseDown="DrawArea_MouseDown" MouseMove="DrawArea_MouseMove" MouseUp="DrawArea_MouseUp">
+        </Canvas>
+    </Grid>
+</Window>
