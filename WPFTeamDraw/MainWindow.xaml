@@ -7,9 +7,17 @@
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
+
         
-        <DockPanel ClipToBounds="True" Grid.Row="0" Background="WhiteSmoke"></DockPanel>
         <Canvas x:Name="DrawArea" Width="600" Height="500" ClipToBounds="True" Grid.Row="1" Background="White" MouseDown="DrawArea_MouseDown" MouseMove="DrawArea_MouseMove" MouseUp="DrawArea_MouseUp">
         </Canvas>
+        <Grid HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="594">
+            <ToggleButton x:Name="BlackColorTB" Background="Black" Height="20" Width="20" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="BlackColorTB_Checked"/>
+            <ToggleButton x:Name="RedColorTB" Background="Red" Height="20" Width="20" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Checked="RedColorTB_Checked"/>
+            <ToggleButton x:Name="GreenColorTB" Background="Green" Height="20" Width="20" HorizontalAlignment="Left" Margin="35,20,0,0" VerticalAlignment="Top" Checked="GreenColorTB_Checked"/>
+            <ToggleButton x:Name="BlueColorTB" Background="Blue" Height="20" Width="20" HorizontalAlignment="Left" Margin="35,45,0,0" VerticalAlignment="Top" Checked="BlueColorTB_Checked"/>
+            <ToggleButton x:Name="YellowColorTB" Background="Yellow" Height="20" Width="20" HorizontalAlignment="Left" Margin="60,20,0,0" VerticalAlignment="Top" Checked="YellowColorTB_Checked"/>
+            <ToggleButton x:Name="PurpleColorTB" Background="Purple" Height="20" Width="20" HorizontalAlignment="Left" Margin="60,45,0,0" VerticalAlignment="Top" Checked="PurpleColorTB_Checked"/>
+        </Grid>
     </Grid>
 </Window>

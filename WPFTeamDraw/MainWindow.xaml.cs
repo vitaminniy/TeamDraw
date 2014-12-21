@@ -74,6 +74,68 @@ namespace WPFTeamDraw
         {
             
         }
+
+        private void BlackColorTB_Checked(object sender, RoutedEventArgs e)
+        {
+            color = Colors.Black;
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+        }
+
+        private void RedColorTB_Checked(object sender, RoutedEventArgs e)
+        {
+            color = Colors.Red;
+            BlackColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+        }
+
+        private void GreenColorTB_Checked(object sender, RoutedEventArgs e)
+        {
+            color = Colors.Green;
+            RedColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+        }
+
+        private void BlueColorTB_Checked(object sender, RoutedEventArgs e)
+        {
+            color = Colors.Blue;
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+        }
+
+        private void YellowColorTB_Checked(object sender, RoutedEventArgs e)
+        {
+            color = Colors.Yellow;
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+        }
+
+        private void PurpleColorTB_Checked(object sender, RoutedEventArgs e)
+        {
+            color = Colors.Purple;
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+        }
+
+        
         
     }
 }
