@@ -26,7 +26,7 @@ namespace WPFTeamDraw
             InitializeComponent();
         }
 
-        private HashMap<Polyline, long> plines = new HashMap<Polyline,long>();
+        private Dictionary<Polyline, long> plines = new Dictionary<Polyline,long>();
 
         private Polyline _pl;
         private bool _isDrawing = false;
