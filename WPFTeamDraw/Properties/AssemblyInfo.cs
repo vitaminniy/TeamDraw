@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("WPFTeamDraw")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Udalov, Karpov, Kim")]
 [assembly: AssemblyProduct("WPFTeamDraw")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
