@@ -7,7 +7,8 @@
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Width="600" ClipToBounds="True" Grid.Row="0" Background="WhiteSmoke"/>
+        
+        <DockPanel ClipToBounds="True" Grid.Row="0" Background="WhiteSmoke"></DockPanel>
         <Canvas x:Name="DrawArea" Width="600" Height="500" ClipToBounds="True" Grid.Row="1" Background="White" MouseDown="DrawArea_MouseDown" MouseMove="DrawArea_MouseMove" MouseUp="DrawArea_MouseUp">
         </Canvas>
     </Grid>

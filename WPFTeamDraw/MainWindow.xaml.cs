@@ -26,10 +26,12 @@ namespace WPFTeamDraw
             InitializeComponent();
         }
 
-        private HashMap<Polyline, long> plines = new HashMap<Polyline,long>();
+        //private HashMap<Polyline, long> plines = new HashMap<Polyline,long>();
 
         private Polyline _pl;
         private bool _isDrawing = false;
+        private Color color = Colors.Black;
+        private int strokeThickness = 5;
 
         private void DrawArea_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -40,8 +42,8 @@ namespace WPFTeamDraw
                 Point p = e.GetPosition(this);
                 p.Y -= 100;
                 _pl.Points.Add(p);
-                _pl.Stroke = new SolidColorBrush(Colors.Black);
-                _pl.StrokeThickness = 5;
+                _pl.Stroke = new SolidColorBrush(color);
+                _pl.StrokeThickness = strokeThickness;
                 DrawArea.Children.Add(_pl);
             }
         }
