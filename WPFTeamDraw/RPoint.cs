@@ -10,9 +10,10 @@ namespace WPFTeamDraw
     [Serializable]
     public struct RPoint
     {
-        Point point;
-        long servertime;
-        long uid;
-        bool isFinal;
+        double x;
+        double y;
+        Int64 servertime;
+        Int64 uid;
+        byte isFinal;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -11,9 +12,19 @@ namespace TeamDrawServer
 {
     class Server
     {
+        private readonly object qlock = new object(); //Lock object for queue initializations
+
+        private static readonly int maxclients = 5;
 
         private static readonly byte pversion = 27;
         private static readonly byte trequest = 11;
+
+        private ConcurrentQueue<byte[]> mqueue = new ConcurrentQueue<byte[]>();
+
+        private ConcurrentDictionary<Socket, ConcurrentQueue<byte[]>> aqueues 
+            = new ConcurrentDictionary<Socket, ConcurrentQueue<byte[]>>();
+
+        private int clients = 0;
 
         IPHostEntry ipHost;
         IPAddress ipAddr;
@@ -34,11 +45,11 @@ namespace TeamDrawServer
             {
                 if (sThread != null)
                 {
-                    Console.WriteLine("Server thread already running, cant server again");
+                    Console.WriteLine("Server thread already running, cant serve again");
                     return;
                 }
 
-                sListener.Bind(ipEndPoint); //May couse exception if port is already in use
+                sListener.Bind(ipEndPoint); //May cause exception if port is already in use
                 sListener.Listen(10);
 
                 sThread = new Thread(new ThreadStart(run));
@@ -53,56 +64,142 @@ namespace TeamDrawServer
                 while (true)
                 {
                     Socket handler = sListener.Accept();
-                    int ta, ta1;
-                    ThreadPool.GetAvailableThreads(out ta, out ta1);
-                    if (ta < 1) //We dont have any available threads to handle another client
+                    
+                    bool allowNew = false;
+                    if (clients < maxclients)
                     {
-                        handler.Send(new byte[] { 0 });
-                        handler.Close();
+                        Interlocked.Increment(ref clients);
+                        allowNew = true;
                     }
-                    else
+                    
+                    try
                     {
-                        handler.Send(new byte[] { 1 });
-                        ThreadPool.QueueUserWorkItem(handleSocket, handler);
+                        if (!allowNew) //We dont have any available threads to handle another client
+                        {
+                            handler.Send(new byte[] { 0 });
+                            handler.Close();
+                        }
+                        else
+                        {
+                            handler.Send(new byte[] { 1 });
+                            ThreadPool.QueueUserWorkItem(handleSocket, handler);
+                        }
+                    }
+                    catch (Exception) { //Happens if connection was closed and we tried to send 1 byte.
+                        if(allowNew) Interlocked.Decrement(ref clients);
                     }
                     
                 }
             }
-            catch (Exception) { }
+            catch (Exception) { } //Happens only when Accept fails. Shouldnt ever happen
         }
 
         private void handleSocket(Object sock)
         {
             Socket handler = (Socket) sock;
 
-            byte[] pbytes = new byte[1];
-            handler.Receive(pbytes);
-            if (pbytes[0] != pversion) //Wrong protocol version or a wrong client
+            try
             {
-                handler.Close();
-                return;
-            }
-
-            //Start syncing time
-            byte[] tbytes = new byte[8];
-            for (int i = 0; i < 3; i++)
-            {
+                byte[] pbytes = new byte[1];
                 handler.Receive(pbytes);
-                if (pbytes[0] != trequest)
+                if (pbytes[0] != pversion) //Wrong protocol version or a wrong client
                 {
-                    IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
-                    Console.WriteLine("Client {0} behaved weirdly during time sync, disconnecting",
-                        remoteIpEndPoint.Address);
-
-                    handler.Close();
-                    return;
+                    throw new Exception();
                 }
-                tbytes = BitConverter.GetBytes(Program.CurrentTimeMillis());
-                handler.Send(tbytes);
-            }
-            //Time synced... Most likely ;-)
-            
 
+                //Start syncing time
+                byte[] tbytes = new byte[8];
+                for (int i = 0; i < 3; i++)
+                {
+                    handler.Receive(pbytes);
+                    if (pbytes[0] != trequest)
+                    {
+                        IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
+                        Console.WriteLine("Client {0} behaved weirdly during time sync, disconnecting",
+                            remoteIpEndPoint.Address);
+
+                        throw new Exception();
+                    }
+                    tbytes = BitConverter.GetBytes(Program.CurrentTimeMillis());
+                    handler.Send(tbytes);
+                }
+                //Time synced... Most likely ;-)
+
+                //Now we need to initialize a queue for our client, add it to socket->queue map and copy all data from main queue
+                //Dont forget synchronization
+                ConcurrentQueue<byte[]> queue;
+                lock (qlock)
+                {
+                    queue = new ConcurrentQueue<byte[]>(mqueue);
+                    aqueues.TryAdd(handler, queue);
+                }
+
+                ThreadPool.QueueUserWorkItem(writeSocket, handler);
+
+                //Now read
+                byte[] data = new byte[33];
+                while (true)
+                {
+                    handler.Receive(data, 33, SocketFlags.None);
+                    addData(data, queue);
+                }
+                
+            }
+            catch (Exception) { //Basically once socket is disconnected this happens.
+                try
+                {
+                    handler.Close();
+                }
+                catch (Exception) { }
+                Interlocked.Decrement(ref clients);
+                ConcurrentQueue<byte[]> o;
+                aqueues.TryRemove(handler, out o);
+            }
+
+        }
+
+        private void writeSocket(Object sock)
+        {
+            Socket handler = (Socket)sock;
+            ConcurrentQueue<byte[]> queue;
+            aqueues.TryGetValue(handler, out queue);
+
+            try
+            {
+                while (true)
+                {
+                    byte[] data;
+                    while (queue.TryDequeue(out data))
+                    {
+                        handler.Send(data);
+                    }
+
+                    Thread.Sleep(100);
+                }
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    handler.Close();
+                }
+                catch (Exception) { }
+            }
+        }
+
+        private void addData(byte[] data, ConcurrentQueue<byte[]> ignore)
+        {
+            ICollection<ConcurrentQueue<byte[]>> queues;
+            lock (qlock)
+            {
+                mqueue.Enqueue(data);
+                queues = aqueues.Values;
+            }
+
+            foreach (ConcurrentQueue<byte[]> queue in queues)
+            {
+                if (queue != ignore) queue.Enqueue(data);
+            }
         }
 
         public void Stop()
