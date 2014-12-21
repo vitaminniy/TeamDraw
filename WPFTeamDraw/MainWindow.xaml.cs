@@ -24,6 +24,7 @@ namespace WPFTeamDraw
         public MainWindow()
         {
             InitializeComponent();
+            SmallThickTB.IsChecked = true;
         }
         //HEAD
         //private HashMap<Polyline, long> plines = new HashMap<Polyline,long>();
@@ -31,11 +32,14 @@ namespace WPFTeamDraw
         private Dictionary<Polyline, long> plines = new Dictionary<Polyline,long>();
         //bd9e86b9e575a8272bd4a2f3fc6fc0332e101d3c
 
+        #region members
         private Polyline _pl;
         private bool _isDrawing = false;
         private Color color = Colors.Black;
         private int strokeThickness = 5;
+        #endregion
 
+        #region drawAction
         private void DrawArea_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -50,7 +54,6 @@ namespace WPFTeamDraw
                 DrawArea.Children.Add(_pl);
             }
         }
-
         private void DrawArea_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && _isDrawing)
@@ -60,7 +63,6 @@ namespace WPFTeamDraw
                 _pl.Points.Add(p);
             }
         }
-
         private void DrawArea_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (_isDrawing)
@@ -74,7 +76,9 @@ namespace WPFTeamDraw
         {
             
         }
+        #endregion
 
+        #region colorpicker, stroke thickness and eraser
         private void BlackColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Black;
@@ -83,8 +87,8 @@ namespace WPFTeamDraw
             BlueColorTB.IsChecked = false;
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
         }
-
         private void RedColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Red;
@@ -93,8 +97,8 @@ namespace WPFTeamDraw
             BlueColorTB.IsChecked = false;
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
+            RedColorTB.IsChecked = false;
         }
-
         private void GreenColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Green;
@@ -103,8 +107,8 @@ namespace WPFTeamDraw
             BlackColorTB.IsChecked = false;
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
         }
-
         private void BlueColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Blue;
@@ -113,8 +117,8 @@ namespace WPFTeamDraw
             BlackColorTB.IsChecked = false;
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
         }
-
         private void YellowColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Yellow;
@@ -123,8 +127,8 @@ namespace WPFTeamDraw
             BlueColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
         }
-
         private void PurpleColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Purple;
@@ -133,9 +137,85 @@ namespace WPFTeamDraw
             BlueColorTB.IsChecked = false;
             YellowColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
         }
 
-        
-        
+        private void SmallThickTB_Checked(object sender, RoutedEventArgs e)
+        {
+            strokeThickness = 5;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+        }
+        private void MediumThickTB_Checked(object sender, RoutedEventArgs e)
+        {
+            strokeThickness = 10;
+            SmallThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+        }
+        private void LargeThickTB_Checked(object sender, RoutedEventArgs e)
+        {
+            strokeThickness = 20;
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+        }
+
+        private void EraseSmallTB_Checked(object sender, RoutedEventArgs e)
+        {
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+
+            color = Colors.White;
+            strokeThickness = 5;
+
+            LargeEraseTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+
+        }
+        private void MediumEraseTB_Checked(object sender, RoutedEventArgs e)
+        {
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+
+            color = Colors.White;
+            strokeThickness = 10;
+
+            LargeEraseTB.IsChecked = false;
+            EraseSmallTB.IsChecked = false;
+        }
+        private void LargeEraseTB_Checked(object sender, RoutedEventArgs e)
+        {
+            RedColorTB.IsChecked = false;
+            GreenColorTB.IsChecked = false;
+            BlueColorTB.IsChecked = false;
+            YellowColorTB.IsChecked = false;
+            PurpleColorTB.IsChecked = false;
+            BlackColorTB.IsChecked = false;
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+
+            color = Colors.White;
+            strokeThickness = 30;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+        }
+        #endregion
+
+       
     }
 }
