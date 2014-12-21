@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTeamDraw", "WPFTeamDraw\WPFTeamDraw.csproj", "{2BFD3ED7-40EE-4B0B-A92A-CC66C2575E82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamDrawServer", "TeamDrawServer\TeamDrawServer.csproj", "{C40B7DC7-2ADC-4D2B-9FB3-07F6A52DC2CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,10 @@ Global
 		{2BFD3ED7-40EE-4B0B-A92A-CC66C2575E82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BFD3ED7-40EE-4B0B-A92A-CC66C2575E82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BFD3ED7-40EE-4B0B-A92A-CC66C2575E82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C40B7DC7-2ADC-4D2B-9FB3-07F6A52DC2CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C40B7DC7-2ADC-4D2B-9FB3-07F6A52DC2CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C40B7DC7-2ADC-4D2B-9FB3-07F6A52DC2CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C40B7DC7-2ADC-4D2B-9FB3-07F6A52DC2CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
