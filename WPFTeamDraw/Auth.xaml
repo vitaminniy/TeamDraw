@@ -1,0 +1,13 @@
+﻿<Window x:Name="AuthForm" x:Class="WPFTeamDraw.Auth"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Auth" Height="206.714" Width="233.216" ResizeMode="NoResize">
+    <Grid Margin="0,0,2,-2">
+        <PasswordBox x:Name="ServerPassword" HorizontalAlignment="Left" Margin="70,79,0,0" VerticalAlignment="Top" Width="126" Height="25"/>
+        <TextBox x:Name="ServerID" HorizontalAlignment="Left" Height="25" Margin="70,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="126"/>
+        <Label Content="Login" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Height="25" Width="60" HorizontalContentAlignment="Center"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Height="25" HorizontalContentAlignment="Center"/>
+        <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="67,127,0,0" VerticalAlignment="Top" Width="97" Height="26" Click="ConnectButton_Click"/>
+
+    </Grid>
+</Window>
