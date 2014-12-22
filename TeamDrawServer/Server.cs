@@ -143,15 +143,23 @@ namespace TeamDrawServer
                 ThreadPool.QueueUserWorkItem(writeSocket, handler);
 
                 //Now read
-                byte[] data = new byte[33];
+                byte[] rbyte = new byte[1];
                 while (true)
                 {
-                    handler.Receive(data, 33, SocketFlags.None);
+                    handler.Receive(rbyte, 1, SocketFlags.None);
+                    byte[] data ;
+                    if (rbyte[0] == lrequest) data = new byte[19];
+                    else if (rbyte[0] == prequest) data = new byte[25];
+                    else if (rbyte[0] == lprequest) data = new byte[9];
+                    else throw new Exception();
+
+                    data[0] = rbyte[0];
+                    recv(data, 1, handler);
                     addData(data, queue);
                 }
                 
             }
-            catch (Exception) { //Basically once socket is disconnected this happens.
+            catch (Exception ex) { //Basically once socket is disconnected this happens.
                 try
                 {
                     handler.Close();
@@ -192,6 +200,11 @@ namespace TeamDrawServer
                 }
                 catch (Exception) { }
             }
+        }
+
+        private void recv(byte[] buf, int offset, Socket handler)
+        {
+            while (offset < buf.Length) offset += handler.Receive(buf, offset, buf.Length - offset, SocketFlags.None);
         }
 
         private void addData(byte[] data, ConcurrentQueue<byte[]> ignore)

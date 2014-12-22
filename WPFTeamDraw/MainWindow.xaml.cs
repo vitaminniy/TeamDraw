@@ -19,7 +19,7 @@ using System.Windows.Threading;
 namespace WPFTeamDraw
 {
 
-    struct DLine{
+    public struct DLine{
         public Polyline pline;
         public long time;
     }
@@ -29,6 +29,7 @@ namespace WPFTeamDraw
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public static Client client;
 
         public static ConcurrentDictionary<long, Polyline> plines
@@ -50,11 +51,6 @@ namespace WPFTeamDraw
             timer.Interval = new TimeSpan(0, 0, 0, 100);
             timer.Start();
         }
-        //HEAD
-        //private HashMap<Polyline, long> plines = new HashMap<Polyline,long>();
-
-        private Dictionary<Polyline, long> plines = new Dictionary<Polyline,long>();
-        //bd9e86b9e575a8272bd4a2f3fc6fc0332e101d3c
 
         #region members
         private Polyline _pl;
@@ -62,6 +58,7 @@ namespace WPFTeamDraw
         private Color color = Colors.Black;
         private int strokeThickness = 5;
         private int r = 0;
+        private long luid = 0;
         #endregion
 
         #region drawAction
@@ -77,6 +74,28 @@ namespace WPFTeamDraw
                 _pl.Stroke = new SolidColorBrush(color);
                 _pl.StrokeThickness = strokeThickness;
                 DrawArea.Children.Add(_pl);
+
+                //Send line to server, send first point to server
+                byte rc =0;
+                if (color == Colors.Black) rc = 0;
+                if (color == Colors.Red) rc = 1;
+                if (color == Colors.Green) rc = 2;
+                if (color == Colors.Blue) rc = 3;
+                if (color == Colors.Yellow) rc = 4;
+                if (color == Colors.Purple) rc = 5;
+                RLine rline = new RLine(rc, (byte)strokeThickness);
+                luid = rline.uid;
+                RPoint rpoint = new RPoint(p.X, p.Y, luid);
+
+                byte[] ldata = new byte[19];
+                ldata[0] = Client.lrequest;
+                Array.Copy(rline.getBytes(), 0, ldata, 1, 18);
+                byte[] pdata = new byte[25];
+                pdata[0] = Client.prequest;
+                Array.Copy(rpoint.getBytes(), 0, pdata, 1, 24);
+
+                client.sendq.Enqueue(ldata);
+                client.sendq.Enqueue(pdata);
             }
         }
 
@@ -87,6 +106,13 @@ namespace WPFTeamDraw
                 Point p = e.GetPosition(this);
                 p.Y -= 100;
                 _pl.Points.Add(p);
+
+                //Send point to server
+                RPoint rpoint = new RPoint(p.X, p.Y, luid);
+                byte[] pdata = new byte[25];
+                pdata[0] = Client.prequest;
+                Array.Copy(rpoint.getBytes(), 0, pdata, 1, 24);
+                client.sendq.Enqueue(pdata);
             }
             r++;
             if (r >= 8) r = 0;
@@ -97,7 +123,13 @@ namespace WPFTeamDraw
             {
                 _isDrawing = false;
                 r = 0;
-                //Send Line to server
+                //Send last point to server
+                byte[] pdata;
+                pdata = BitConverter.GetBytes(luid);
+                byte[] data = new byte[9];
+                data[0] = Client.lprequest;
+                Array.Copy(pdata, 0, data, 1, 8);
+                client.sendq.Enqueue(data);
             }
         }
 
@@ -132,11 +164,35 @@ namespace WPFTeamDraw
         public static void handleRLine(RLine rline)
         {
             Polyline pline = new Polyline();
+            Color color = Colors.Black;
+            if(rline.color == 0) color = Colors.Black;
+            if(rline.color == 1) color = Colors.Red;
+            if(rline.color == 2) color = Colors.Green;
+            if(rline.color == 3) color = Colors.Blue;
+            if(rline.color == 4) color = Colors.Yellow;
+            if(rline.color == 5) color = Colors.Purple;
+            pline.Stroke = new SolidColorBrush(color);
+            pline.StrokeThickness = rline.thickness;
+
+            
+            plines.TryAdd(rline.uid, pline);
+            DLine dline = new DLine();
+            dline.pline = pline;
+            dline.time = rline.servertime;
+            nplines.Enqueue(dline);
         }
 
-        public static void handleRPoint(RPoint rpoint, bool isFinal)
+        public static void handleRPoint(RPoint rpoint)
         {
+            Polyline pline;
+            if (!plines.TryGetValue(rpoint.uid, out pline)) return;
+            pline.Points.Add(new Point(rpoint.x, rpoint.y));
+        }
 
+        public static void handleLPoint(long uid)
+        {
+            Polyline pline;
+            plines.TryRemove(uid, out pline);
         }
 
         #endregion
@@ -278,6 +334,11 @@ namespace WPFTeamDraw
             MediumEraseTB.IsChecked = false;
         }
         #endregion
+
+        private void MainWindows_Closed(object sender, EventArgs e)
+        {
+            System.Environment.Exit(0);
+        }
 
        
     }
