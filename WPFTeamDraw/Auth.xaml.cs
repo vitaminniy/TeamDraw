@@ -24,15 +24,17 @@ namespace WPFTeamDraw
             InitializeComponent();
         }
 
-        private int ServerIDValue;
-        private int ServerPasswordValue;
+        private string ip;
+        private int port;
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            ServerIDValue = int.Parse(ServerID.Text);
-            ServerPasswordValue = int.Parse(ServerPassword.Password);
-            //if ID and Pwd are ok - then await connect and open a new window
-            //else throw new message that ID and/or Pwd is/are invalid.
+            ip = ServerIP.Text;
+            port = int.Parse(ServerPort.Text);
+            //if IP and Port are ok - then await connect and open a new window
+            MainWindow.client = new Client(ip, port);
+            MainWindow.client.Start();
+
 
             //delete this later pls
             var Drawer = new MainWindow();

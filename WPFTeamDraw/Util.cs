@@ -8,7 +8,7 @@ namespace WPFTeamDraw
 {
     public class Util
     {
-
+        private static readonly Random r = new Random();
         private static readonly DateTime Jan1st1970 = new DateTime
             (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -28,6 +28,11 @@ namespace WPFTeamDraw
         public static long ServerTimeMillis()
         {
             return CurrentTimeMillis() + ServerTimeDifference;
+        }
+
+        public static long RandomLong()
+        {
+            return (long)((r.NextDouble() * 2.0 - 1.0) * long.MaxValue);
         }
     }
 }

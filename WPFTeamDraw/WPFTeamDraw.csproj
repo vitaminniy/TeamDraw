@@ -63,6 +63,8 @@
     <Compile Include="Auth.xaml.cs">
       <DependentUpon>Auth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Client.cs" />
+    <Compile Include="RLine.cs" />
     <Compile Include="RPoint.cs" />
     <Compile Include="Util.cs" />
     <Page Include="Auth.xaml">

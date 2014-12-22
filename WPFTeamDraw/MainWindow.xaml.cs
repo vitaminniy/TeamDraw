@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,18 +14,41 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WPFTeamDraw
 {
+
+    struct DLine{
+        public Polyline pline;
+        public long time;
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static Client client;
+
+        public static ConcurrentDictionary<long, Polyline> plines
+            = new ConcurrentDictionary<long,Polyline>();
+        public static ConcurrentQueue<DLine> nplines
+            = new ConcurrentQueue<DLine>();
+
+        private static LinkedList<DLine> dlines = new LinkedList<DLine>();
+
+        private DispatcherTimer timer;
+
         public MainWindow()
         {
             InitializeComponent();
             SmallThickTB.IsChecked = true;
+
+            timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Tick += new EventHandler(dispatcherTimer_Tick);
+            timer.Interval = new TimeSpan(0, 0, 0, 100);
+            timer.Start();
         }
         //HEAD
         //private HashMap<Polyline, long> plines = new HashMap<Polyline,long>();
@@ -37,6 +61,7 @@ namespace WPFTeamDraw
         private bool _isDrawing = false;
         private Color color = Colors.Black;
         private int strokeThickness = 5;
+        private int r = 0;
         #endregion
 
         #region drawAction
@@ -54,28 +79,66 @@ namespace WPFTeamDraw
                 DrawArea.Children.Add(_pl);
             }
         }
+
         private void DrawArea_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && _isDrawing)
+            if (r==0 && e.LeftButton == MouseButtonState.Pressed && _isDrawing)
             {
                 Point p = e.GetPosition(this);
                 p.Y -= 100;
                 _pl.Points.Add(p);
             }
+            r++;
+            if (r >= 8) r = 0;
         }
         private void DrawArea_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (_isDrawing)
             {
                 _isDrawing = false;
+                r = 0;
                 //Send Line to server
             }
         }
 
-        public void DrawLineSync(RPoint rline)
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            
+            DLine dline;
+            while (nplines.TryDequeue(out dline))
+            {
+                LinkedListNode<DLine> oline = dlines.Last;
+                while (oline != null && oline.Value.time > dline.time)
+                {
+                    oline = oline.Previous;
+                    if (oline != null) DrawArea.Children.Remove(oline.Value.pline);
+                }
+                if (oline == null) //Means we need to draw new line before every other line
+                {
+                    dlines.AddFirst(dline);
+                    foreach (DLine ddline in dlines) DrawArea.Children.Add(ddline.pline);
+                }
+                else
+                {
+                    dlines.AddAfter(oline, dline);
+                    while (oline != null)
+                    {
+                        DrawArea.Children.Add(oline.Value.pline);
+                        oline = oline.Next;
+                    }
+                }
+            }
         }
+
+        public static void handleRLine(RLine rline)
+        {
+            Polyline pline = new Polyline();
+        }
+
+        public static void handleRPoint(RPoint rpoint, bool isFinal)
+        {
+
+        }
+
         #endregion
 
         #region colorpicker, stroke thickness and eraser

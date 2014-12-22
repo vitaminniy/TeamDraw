@@ -17,7 +17,11 @@ namespace TeamDrawServer
         private static readonly int maxclients = 5;
 
         private static readonly byte pversion = 27;
+
         private static readonly byte trequest = 11;
+        private static readonly byte lrequest = 12;
+        private static readonly byte prequest = 13;
+        private static readonly byte lprequest = 14;
 
         private ConcurrentQueue<byte[]> mqueue = new ConcurrentQueue<byte[]>();
 
@@ -97,13 +101,15 @@ namespace TeamDrawServer
         private void handleSocket(Object sock)
         {
             Socket handler = (Socket) sock;
-
+            IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
             try
             {
                 byte[] pbytes = new byte[1];
                 handler.Receive(pbytes);
                 if (pbytes[0] != pversion) //Wrong protocol version or a wrong client
                 {
+                    Console.WriteLine("Client {0} sent a wrong protocol version, disconnecting",
+                        remoteIpEndPoint.Address);
                     throw new Exception();
                 }
 
@@ -114,7 +120,7 @@ namespace TeamDrawServer
                     handler.Receive(pbytes);
                     if (pbytes[0] != trequest)
                     {
-                        IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
+                        
                         Console.WriteLine("Client {0} behaved weirdly during time sync, disconnecting",
                             remoteIpEndPoint.Address);
 
@@ -154,6 +160,7 @@ namespace TeamDrawServer
                 Interlocked.Decrement(ref clients);
                 ConcurrentQueue<byte[]> o;
                 aqueues.TryRemove(handler, out o);
+                Console.WriteLine("Disconnecting client...");
             }
 
         }
