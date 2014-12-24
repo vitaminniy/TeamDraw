@@ -1,7 +1,7 @@
 ﻿<Window x:Name="AuthForm" x:Class="WPFTeamDraw.Auth"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auth" Height="206.714" Width="233.216" ResizeMode="NoResize">
+        Title="Connection window" Height="206.714" Width="233.216" ResizeMode="NoResize">
     <Grid Margin="0,0,2,-2">
         <TextBox x:Name="ServerIP" HorizontalAlignment="Left" Height="25" Margin="70,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="126" Text="127.0.0.1"/>
         <Label Content="IP" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Height="25" Width="60" HorizontalContentAlignment="Center"/>

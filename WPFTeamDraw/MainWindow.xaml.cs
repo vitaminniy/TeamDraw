@@ -51,6 +51,7 @@ namespace WPFTeamDraw
         private Polyline _pl;
         private bool _isDrawing = false;
         private Color color = Colors.Black;
+        private Color lastColor;
         private int strokeThickness = 5;
         private int r = 0;
         private long luid = 0;
@@ -205,6 +206,7 @@ namespace WPFTeamDraw
         private void BlackColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Black;
+            lastColor = Colors.Black;
             RedColorTB.IsChecked = false;
             GreenColorTB.IsChecked = false;
             BlueColorTB.IsChecked = false;
@@ -215,6 +217,7 @@ namespace WPFTeamDraw
         private void RedColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Red;
+            lastColor = Colors.Red;
             BlackColorTB.IsChecked = false;
             GreenColorTB.IsChecked = false;
             BlueColorTB.IsChecked = false;
@@ -225,6 +228,7 @@ namespace WPFTeamDraw
         private void GreenColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Green;
+            lastColor = Colors.Green;
             RedColorTB.IsChecked = false;
             BlueColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
@@ -235,6 +239,7 @@ namespace WPFTeamDraw
         private void BlueColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Blue;
+            lastColor = Colors.Blue;
             RedColorTB.IsChecked = false;
             GreenColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
@@ -245,6 +250,7 @@ namespace WPFTeamDraw
         private void YellowColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Yellow;
+            lastColor = Colors.Yellow;
             RedColorTB.IsChecked = false;
             GreenColorTB.IsChecked = false;
             BlueColorTB.IsChecked = false;
@@ -255,6 +261,7 @@ namespace WPFTeamDraw
         private void PurpleColorTB_Checked(object sender, RoutedEventArgs e)
         {
             color = Colors.Purple;
+            lastColor = Colors.Purple;
             RedColorTB.IsChecked = false;
             GreenColorTB.IsChecked = false;
             BlueColorTB.IsChecked = false;
@@ -268,18 +275,30 @@ namespace WPFTeamDraw
             strokeThickness = 5;
             MediumThickTB.IsChecked = false;
             LargeThickTB.IsChecked = false;
+            color = lastColor;
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void MediumThickTB_Checked(object sender, RoutedEventArgs e)
         {
             strokeThickness = 10;
             SmallThickTB.IsChecked = false;
             LargeThickTB.IsChecked = false;
+            color = lastColor;
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void LargeThickTB_Checked(object sender, RoutedEventArgs e)
         {
             strokeThickness = 20;
             SmallThickTB.IsChecked = false;
             MediumThickTB.IsChecked = false;
+            color = lastColor;
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
 
         private void EraseSmallTB_Checked(object sender, RoutedEventArgs e)
@@ -290,6 +309,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+
             SmallThickTB.IsChecked = false;
             MediumThickTB.IsChecked = false;
             LargeThickTB.IsChecked = false;
@@ -313,6 +336,10 @@ namespace WPFTeamDraw
             MediumThickTB.IsChecked = false;
             LargeThickTB.IsChecked = false;
 
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+
             color = Colors.White;
             strokeThickness = 10;
 
@@ -327,6 +354,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
+            SmallThickTB.IsChecked = false;
+            MediumThickTB.IsChecked = false;
+            LargeThickTB.IsChecked = false;
+
             SmallThickTB.IsChecked = false;
             MediumThickTB.IsChecked = false;
             LargeThickTB.IsChecked = false;
