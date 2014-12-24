@@ -19,9 +19,11 @@ namespace WPFTeamDraw
     /// </summary>
     public partial class Auth : Window
     {
+        private MainWindow Drawer;
         public Auth()
         {
             InitializeComponent();
+            Drawer = new MainWindow();
         }
 
         private string ip;
@@ -29,7 +31,7 @@ namespace WPFTeamDraw
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            var Drawer = new MainWindow();
+            
             while (true)
             {
                 ip = ServerIP.Text;
@@ -47,6 +49,7 @@ namespace WPFTeamDraw
                 {
                     var error = "Couldn't connect to IP: " + ip;
                     var mbox = MessageBox.Show(error, "Error");
+                    return;
                 }
 
             }
