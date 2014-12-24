@@ -213,6 +213,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void RedColorTB_Checked(object sender, RoutedEventArgs e)
         {
@@ -224,6 +228,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             RedColorTB.IsChecked = false;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void GreenColorTB_Checked(object sender, RoutedEventArgs e)
         {
@@ -235,6 +243,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             GreenColorTB.IsChecked = false;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void BlueColorTB_Checked(object sender, RoutedEventArgs e)
         {
@@ -246,6 +258,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             BlueColorTB.IsChecked = false;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void YellowColorTB_Checked(object sender, RoutedEventArgs e)
         {
@@ -257,6 +273,10 @@ namespace WPFTeamDraw
             BlackColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
             YellowColorTB.IsChecked = false;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
         private void PurpleColorTB_Checked(object sender, RoutedEventArgs e)
         {
@@ -268,6 +288,10 @@ namespace WPFTeamDraw
             YellowColorTB.IsChecked = false;
             BlackColorTB.IsChecked = false;
             PurpleColorTB.IsChecked = false;
+
+            EraseSmallTB.IsChecked = false;
+            MediumEraseTB.IsChecked = false;
+            LargeEraseTB.IsChecked = false;
         }
 
         private void SmallThickTB_Checked(object sender, RoutedEventArgs e)
@@ -279,6 +303,7 @@ namespace WPFTeamDraw
             EraseSmallTB.IsChecked = false;
             MediumEraseTB.IsChecked = false;
             LargeEraseTB.IsChecked = false;
+
         }
         private void MediumThickTB_Checked(object sender, RoutedEventArgs e)
         {
