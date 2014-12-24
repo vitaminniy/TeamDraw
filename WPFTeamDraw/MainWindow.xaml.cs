@@ -29,16 +29,6 @@ namespace WPFTeamDraw
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        public static Client client;
-
-        public static Dictionary<long, Polyline> plines
-            = new Dictionary<long,Polyline>();
-
-        private static LinkedList<DLine> dlines = new LinkedList<DLine>();
-
-        private static MainWindow instance;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -51,10 +41,14 @@ namespace WPFTeamDraw
         private Polyline _pl;
         private bool _isDrawing = false;
         private Color color = Colors.Black;
-        private Color lastColor;
+        private Color lastColor = Colors.Black;
         private int strokeThickness = 5;
         private int r = 0;
         private long luid = 0;
+        private static LinkedList<DLine> dlines = new LinkedList<DLine>();
+        private static MainWindow instance;
+        public static Client client;
+        public static Dictionary<long, Polyline> plines = new Dictionary<long, Polyline>();
         #endregion
 
         #region drawAction
