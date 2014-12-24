@@ -106,7 +106,7 @@ namespace WPFTeamDraw
                 client.sendq.Enqueue(pdata);
             }
             r++;
-            if (r >= 8) r = 0;
+            if (r >= 4) r = 0;
         }
         private void DrawArea_MouseUp(object sender, MouseButtonEventArgs e)
         {
