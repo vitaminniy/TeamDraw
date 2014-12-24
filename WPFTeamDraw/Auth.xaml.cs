@@ -29,15 +29,27 @@ namespace WPFTeamDraw
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            ip = ServerIP.Text;
-            port = int.Parse(ServerPort.Text);
             var Drawer = new MainWindow();
-            //if IP and Port are ok - then await connect and open a new window
-            MainWindow.client = new Client(ip, port);
-            MainWindow.client.Start();
+            while (true)
+            {
+                ip = ServerIP.Text;
+                port = int.Parse(ServerPort.Text);
+                
+                //if IP and Port are ok - then await connect and open a new window
 
+                try
+                {
+                    MainWindow.client = new Client(ip, port);
+                    MainWindow.client.Start();
+                    break;
+                }
+                catch (Exception)
+                {
+                    var error = "Couldn't connect to IP: " + ip;
+                    var mbox = MessageBox.Show(error, "Error");
+                }
 
-            //delete this later pls
+            }
             
             Drawer.Show();
             Drawer.Focus();
