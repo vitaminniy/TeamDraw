@@ -20,7 +20,6 @@ namespace WPFTeamDraw
 
         public ConcurrentQueue<byte[]> sendq = new ConcurrentQueue<byte[]>();
 
-        IPHostEntry ipHost;
         IPAddress ipAddr;
         IPEndPoint ipEndPoint;
         Socket sender;
@@ -29,8 +28,7 @@ namespace WPFTeamDraw
 
         public Client(string ip, int port)
         {
-            ipHost = Dns.GetHostEntry(ip);
-            ipAddr = ipHost.AddressList[0];
+            ipAddr = IPAddress.Parse(ip);
             ipEndPoint = new IPEndPoint(ipAddr, port);
 
             sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);

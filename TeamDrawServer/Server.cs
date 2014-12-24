@@ -30,15 +30,13 @@ namespace TeamDrawServer
 
         private int clients = 0;
 
-        IPHostEntry ipHost;
         IPAddress ipAddr;
         IPEndPoint ipEndPoint;
         Socket sListener;
         Thread sThread;
         public Server(string ip, int port)
         {
-            ipHost = Dns.GetHostEntry(ip);
-            ipAddr = ipHost.AddressList[0];
+            ipAddr = IPAddress.Parse(ip);
             ipEndPoint = new IPEndPoint(ipAddr, port);
             sListener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
