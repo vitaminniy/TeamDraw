@@ -99,6 +99,7 @@ namespace TeamDrawServer
         private void handleSocket(Object sock)
         {
             Socket handler = (Socket) sock;
+            Console.WriteLine("Handling client {0}", handler.RemoteEndPoint);
             IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
             try
             {
@@ -166,7 +167,7 @@ namespace TeamDrawServer
                 Interlocked.Decrement(ref clients);
                 ConcurrentQueue<byte[]> o;
                 aqueues.TryRemove(handler, out o);
-                Console.WriteLine("Disconnecting client...");
+                Console.WriteLine("Disconnecting client {0}", handler.RemoteEndPoint);
             }
 
         }
