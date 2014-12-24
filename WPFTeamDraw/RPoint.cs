@@ -27,8 +27,8 @@ namespace WPFTeamDraw
         {
             byte[] data = new byte[24];
             Array.Copy(BitConverter.GetBytes(x), 0, data, 0, 8);
-            Array.Copy(BitConverter.GetBytes(x), 0, data, 8, 8);
-            Array.Copy(BitConverter.GetBytes(x), 0, data, 16, 8);
+            Array.Copy(BitConverter.GetBytes(y), 0, data, 8, 8);
+            Array.Copy(BitConverter.GetBytes(uid), 0, data, 16, 8);
             return data;
         }
 

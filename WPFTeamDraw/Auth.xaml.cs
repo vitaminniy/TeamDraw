@@ -31,13 +31,14 @@ namespace WPFTeamDraw
         {
             ip = ServerIP.Text;
             port = int.Parse(ServerPort.Text);
+            var Drawer = new MainWindow();
             //if IP and Port are ok - then await connect and open a new window
             MainWindow.client = new Client(ip, port);
             MainWindow.client.Start();
 
 
             //delete this later pls
-            var Drawer = new MainWindow();
+            
             Drawer.Show();
             Drawer.Focus();
             this.Close();

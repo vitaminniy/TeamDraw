@@ -32,24 +32,19 @@ namespace WPFTeamDraw
 
         public static Client client;
 
-        public static ConcurrentDictionary<long, Polyline> plines
-            = new ConcurrentDictionary<long,Polyline>();
-        public static ConcurrentQueue<DLine> nplines
-            = new ConcurrentQueue<DLine>();
+        public static Dictionary<long, Polyline> plines
+            = new Dictionary<long,Polyline>();
 
         private static LinkedList<DLine> dlines = new LinkedList<DLine>();
 
-        private DispatcherTimer timer;
+        private static MainWindow instance;
 
         public MainWindow()
         {
             InitializeComponent();
             SmallThickTB.IsChecked = true;
 
-            timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Tick += new EventHandler(dispatcherTimer_Tick);
-            timer.Interval = new TimeSpan(0, 0, 0, 100);
-            timer.Start();
+            instance = this;
         }
 
         #region members
@@ -78,11 +73,12 @@ namespace WPFTeamDraw
                 //Send line to server, send first point to server
                 byte rc =0;
                 if (color == Colors.Black) rc = 0;
-                if (color == Colors.Red) rc = 1;
-                if (color == Colors.Green) rc = 2;
-                if (color == Colors.Blue) rc = 3;
-                if (color == Colors.Yellow) rc = 4;
-                if (color == Colors.Purple) rc = 5;
+                else if (color == Colors.Red) rc = 1;
+                else if (color == Colors.Green) rc = 2;
+                else if (color == Colors.Blue) rc = 3;
+                else if (color == Colors.Yellow) rc = 4;
+                else if (color == Colors.Purple) rc = 5;
+                else if (color == Colors.White) rc = 6;
                 RLine rline = new RLine(rc, (byte)strokeThickness);
                 luid = rline.uid;
                 RPoint rpoint = new RPoint(p.X, p.Y, luid);
@@ -133,56 +129,60 @@ namespace WPFTeamDraw
             }
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        public static void handleRLine(RLine rline)
         {
-            DLine dline;
-            while (nplines.TryDequeue(out dline))
-            {
-                LinkedListNode<DLine> oline = dlines.Last;
-                while (oline != null && oline.Value.time > dline.time)
-                {
-                    oline = oline.Previous;
-                    if (oline != null) DrawArea.Children.Remove(oline.Value.pline);
-                }
-                if (oline == null) //Means we need to draw new line before every other line
-                {
-                    dlines.AddFirst(dline);
-                    foreach (DLine ddline in dlines) DrawArea.Children.Add(ddline.pline);
-                }
-                else
-                {
-                    dlines.AddAfter(oline, dline);
-                    while (oline != null)
-                    {
-                        DrawArea.Children.Add(oline.Value.pline);
-                        oline = oline.Next;
-                    }
-                }
-            }
+            Application.Current.Dispatcher.BeginInvoke((Action<RLine>)instance.syncHandleRLine, rline);
         }
 
-        public static void handleRLine(RLine rline)
+        private void syncHandleRLine(RLine rline)
         {
             Polyline pline = new Polyline();
             Color color = Colors.Black;
             if(rline.color == 0) color = Colors.Black;
-            if(rline.color == 1) color = Colors.Red;
-            if(rline.color == 2) color = Colors.Green;
-            if(rline.color == 3) color = Colors.Blue;
-            if(rline.color == 4) color = Colors.Yellow;
-            if(rline.color == 5) color = Colors.Purple;
+            else if (rline.color == 1) color = Colors.Red;
+            else if (rline.color == 2) color = Colors.Green;
+            else if (rline.color == 3) color = Colors.Blue;
+            else if (rline.color == 4) color = Colors.Yellow;
+            else if (rline.color == 5) color = Colors.Purple;
+            else if (rline.color == 6) color = Colors.White;
             pline.Stroke = new SolidColorBrush(color);
             pline.StrokeThickness = rline.thickness;
 
             
-            plines.TryAdd(rline.uid, pline);
+            plines.Add(rline.uid, pline);
             DLine dline = new DLine();
             dline.pline = pline;
             dline.time = rline.servertime;
-            nplines.Enqueue(dline);
+
+            LinkedListNode<DLine> oline = dlines.Last;
+            while (oline != null && oline.Value.time > dline.time)
+            {
+                DrawArea.Children.Remove(oline.Value.pline);
+                oline = oline.Previous;
+            }
+            if (oline == null) //Means we need to draw new line before every other line
+            {
+                dlines.AddFirst(dline);
+                foreach (DLine ddline in dlines) DrawArea.Children.Add(ddline.pline);
+            }
+            else
+            {
+                dlines.AddAfter(oline, dline);
+                oline = oline.Next;
+                while (oline != null)
+                {
+                    DrawArea.Children.Add(oline.Value.pline);
+                    oline = oline.Next;
+                }
+            }
         }
 
         public static void handleRPoint(RPoint rpoint)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action<RPoint>)instance.syncHandleRPoint, rpoint);
+        }
+
+        private void syncHandleRPoint(RPoint rpoint)
         {
             Polyline pline;
             if (!plines.TryGetValue(rpoint.uid, out pline)) return;
@@ -191,8 +191,12 @@ namespace WPFTeamDraw
 
         public static void handleLPoint(long uid)
         {
-            Polyline pline;
-            plines.TryRemove(uid, out pline);
+            Application.Current.Dispatcher.BeginInvoke((Action<long>)instance.syncHandleLPoint, uid);
+        }
+
+        private void syncHandleLPoint(long uid)
+        {
+            plines.Remove(uid);
         }
 
         #endregion
